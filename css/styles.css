@@ -1,0 +1,648 @@
+/* ============================================================
+   Life Dashboard — styles.css
+   Design: dark & light, minimal, clean card-based layout
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- DARK theme (default) ---------- */
+:root,
+[data-theme="dark"] {
+  --bg:          #0f1117;
+  --surface:     #1a1d27;
+  --surface-alt: #22263a;
+  --border:      #2e3250;
+  --accent:      #6c63ff;
+  --accent-dark: #574fd6;
+  --accent-soft: rgba(108, 99, 255, 0.15);
+  --danger:      #e05c5c;
+  --success:     #4caf82;
+  --text-main:   #e8eaf6;
+  --text-muted:  #7b82a8;
+  --text-dim:    #4a5080;
+  --radius:      12px;
+  --radius-sm:   8px;
+  --shadow:      0 4px 24px rgba(0, 0, 0, 0.45);
+  --transition:  0.2s ease;
+}
+
+/* ---------- LIGHT theme ---------- */
+[data-theme="light"] {
+  --bg:          #f0f2fa;
+  --surface:     #ffffff;
+  --surface-alt: #eef0f8;
+  --border:      #d0d4e8;
+  --accent:      #5a52e0;
+  --accent-dark: #4840c4;
+  --accent-soft: rgba(90, 82, 224, 0.12);
+  --danger:      #d94f4f;
+  --success:     #3d9e70;
+  --text-main:   #1a1d2e;
+  --text-muted:  #5a6080;
+  --text-dim:    #9299b8;
+  --shadow:      0 4px 24px rgba(0, 0, 0, 0.10);
+}
+
+/* Smooth theme transition */
+body,
+.card,
+.modal,
+input,
+.btn,
+.link-chip,
+.todo-item {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  padding: 24px 32px 48px;
+  line-height: 1.6;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-left h1 {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.date-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ----- Custom name ----- */
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.name-display {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.name-display:empty::before {
+  content: 'Set your name...';
+  color: var(--text-dim);
+}
+
+.name-input-row input {
+  width: auto;
+  flex: 1 1 160px;
+  min-width: 120px;
+}
+
+/* Icon-only button (pencil) */
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 4px;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity var(--transition);
+}
+.btn-icon:hover { opacity: 1; }
+
+/* ----- Right side of header ----- */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.clock-text {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ----- Theme toggle button ----- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.theme-toggle:hover {
+  background: var(--border);
+  color: var(--text-main);
+}
+
+#theme-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ============================================================
+   DASHBOARD GRID
+   ============================================================ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 24px;
+}
+
+#links-section {
+  grid-column: 1 / -1;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), opacity var(--transition), transform var(--transition);
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-secondary {
+  background: var(--surface-alt);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover {
+  background: var(--surface-alt);
+  color: var(--text-main);
+}
+
+/* Small variant */
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 0.82rem;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+input[type="text"],
+input[type="url"],
+input[type="number"] {
+  width: 100%;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  padding: 9px 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+input::placeholder { color: var(--text-dim); }
+
+/* Remove number input spinners (we provide Set button) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { opacity: 1; }
+
+/* ---------- Empty message ---------- */
+.empty-msg {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* ============================================================
+   TO-DO LIST
+   ============================================================ */
+.todo-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.todo-input-row input { flex: 1; }
+
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  transition: border-color var(--transition), opacity var(--transition);
+}
+
+.todo-item:hover { border-color: var(--accent); }
+
+/* Custom checkbox */
+.todo-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.todo-checkbox:checked {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.todo-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  word-break: break-word;
+  cursor: default;
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.todo-item.done { opacity: 0.65; }
+
+.todo-actions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.todo-item:hover .todo-actions { opacity: 1; }
+
+.todo-actions button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.todo-actions .edit-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.todo-actions .delete-btn:hover {
+  background: rgba(224, 92, 92, 0.15);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ============================================================
+   FOCUS TIMER
+   ============================================================ */
+
+/* Duration picker row */
+.duration-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.duration-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.duration-input {
+  width: 72px !important;
+  text-align: center;
+  padding: 6px 8px !important;
+  font-size: 0.9rem !important;
+}
+
+/* Disabled while running */
+.duration-input:disabled,
+#timer-set-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.timer-display {
+  text-align: center;
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  font-weight: 200;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-main);
+  margin: 8px 0 12px;
+  line-height: 1;
+}
+
+.timer-display span {
+  display: inline-block;
+  min-width: 2ch;
+}
+
+.timer-status-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  min-height: 1.4em;
+}
+
+body.timer-running .timer-display {
+  color: var(--accent);
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.session-counter {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+#session-count {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ============================================================
+   QUICK LINKS
+   ============================================================ */
+.links-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.links-input-row #link-name-input { flex: 0 1 160px; }
+.links-input-row #link-url-input  { flex: 1 1 200px; }
+
+.links-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 7px 14px 7px 12px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  text-decoration: none;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.link-chip:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.link-chip .link-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.link-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0 0 0 4px;
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.link-delete-btn:hover { color: var(--danger); }
+
+/* ============================================================
+   EDIT MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow);
+  animation: modal-in 0.18s ease;
+}
+
+@keyframes modal-in {
+  from { transform: translateY(-16px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+.modal h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.modal input { margin-bottom: 16px; }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 700px) {
+  body { padding: 16px 16px 40px; }
+
+  .dashboard-grid { grid-template-columns: 1fr; }
+
+  #links-section { grid-column: 1 / -1; }
+
+  .clock-text { font-size: 2rem; }
+
+  .timer-display { font-size: 3.5rem; }
+
+  .header-right { align-items: flex-start; }
+}
+
+@media (max-width: 420px) {
+  .todo-input-row,
+  .links-input-row {
+    flex-direction: column;
+  }
+
+  .links-input-row #link-name-input,
+  .links-input-row #link-url-input {
+    flex: none;
+    width: 100%;
+  }
+}
